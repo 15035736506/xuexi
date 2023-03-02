@@ -1,63 +1,37 @@
-#include"game.h"
-void meau()
+#include "game.h"
+void menu()
 {
-	printf("*****************************\n");
-	printf("*****1.play  0.exit**********\n");
-	printf("*****************************\n");
+	printf("************************************\n");
+	printf("******* 1.paly  0.exit *************\n");
+	printf("************************************\n");
 }
-//游戏整个算法实现
 void game()
 {
-	char board[ROW][COL] = { 0 };//全部空格
-	int ret = 0;
-	//初始化棋盘
-	Initboard(board, ROW, COL);
+	printf("扫雷\n");
+	static char mine[ROWS][COLS] = { 0 };//布置雷
+	static char show[ROWS][COLS] = { 0 };//排查雷
+	Initboard(mine, ROWS, COLS,'0');
+	Initboard(show, ROWS, COLS, '*');//初始化棋盘
 	//打印棋盘
-	Displayboard(board, ROW, COL);
-	//下棋
-	while (1)
-	{
-		//玩家下棋
-		Playermmove(board, ROW, COL);
-		Displayboard(board, ROW, COL);
-		ret = iswin(board, ROW, COL);//判断输赢
-		if (ret != 'C')
-		{
-			break;
-		}
-		//电脑下棋
-		Computermove(board, ROW, COL);
-		Displayboard(board, ROW, COL);
-		ret = iswin(board, ROW, COL);
-		if (ret != 'C')
-		{
-			break;
-		}
-	}
-	if (ret == '*')
-	{
-		printf("玩家赢\n");
-	}
-	if (ret == '#')
-	{
-		printf("电脑赢\n");
-	}
-	if (ret == 'Q')
-	{
-		printf("平局\n");
-	}
-	
+	//DisplayBoard(mine, ROW, COL);
+	DisplayBoard(show, ROW, COL);
+	//布雷
+	Setmine(mine, ROW, COL);
+	//DisplayBoard(mine, ROW, COL);
+	//排雷
+	Findmine(mine, show, ROW, COL);
 }
 void test()
 {
+	
 	int input = 0;
-	srand((unsigned int)time(NULL));
+	srand((unsigned)time(NULL));
 	do
 	{
-		meau();
-		printf("请选择;>(1/0)");
+		menu();
+		printf("请选择:>(1/0)");
 		scanf("%d", &input);
-		switch(input)
+		switch (input)
 		{
 		case 1:
 			printf("开始游戏\n");
@@ -70,8 +44,9 @@ void test()
 			printf("选择错误，请重新选择\n");
 			break;
 		}
-
-	} while (input);
+		
+	}
+	while (input);
 }
 int main()
 {

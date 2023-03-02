@@ -1,12 +1,16 @@
 #define  _CRT_SECURE_NO_WARNINGS
+#define ESAY_COUNT 10
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
-#define ROW 3
-#define COL 3
-void Initboard(char board[ROW][COL], int row, int col);
-void Displayboard(char board[ROW][COL], int row, int col);
-void Playermmove(char board[ROW][COL], int row, int col);
-void Computermove(char board[ROW][COL], int row, int col);
-char iswin(char board[ROW][COL], int row, int col);
 
+#define ROW 9
+#define COL 9
+#define ROWS ROW+2
+#define COLS COL+2
+
+void Initboard(char board[ROWS][COLS], int rows, int cols,char set);
+void DisplayBoard(char board[ROWS][COLS], int row, int col);
+void Setmine(char board[ROWS][COLS], int row, int col);
+void Findmine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col);

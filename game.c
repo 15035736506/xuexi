@@ -1,132 +1,143 @@
-#include"game.h"
-//归零棋盘
-void Initboard(char board[ROW][COL], int row, int col)
+#include "game.h"
+//初始化棋盘
+void Initboard(char board[ROWS][COLS], int rows, int cols, char set)
 {
 	int i, j;
-	for (i = 0;i < row;i++)
+	for (i = 0;i <= rows;i++)
 	{
-		for (j = 0;j < col;j++)
+		for(j = 0;j <= cols;j++)
 		{
-			board[i][j] = ' ';
+			board[i][j] = set;
 		}
 	}
 }
 //打印棋盘
-void Displayboard(char board[ROW][COL], int row, int col)
+void  DisplayBoard(char board[ROWS][COLS], int row, int col)
 {
 	int i, j;
-	for (i = 0;i < row;i++)
+	printf("  ");
+	for (j = 1;j <= col;j++)//打印列行号
 	{
-		for (j = 0;j < col; j++)
+		printf("%d ", j);
+	}
+	printf("\n");
+	for (i = 1;i <= row;i++)
+	{
+		printf("%d ", i);//打印行行号
+		for (j = 1;j <=col;j++)
 		{
-			printf(" %c ", board[i][j]);
-			if (j< col - 1)
-				printf("|");
-		}
-		printf("\n");
-		if (i < row-1)
-		{
-			for (j = 0;j < col; j++)
-			{
-				printf("---");
-				if (j < col - 1)
-					printf("|");
-			}
+			printf("%c ", board[i][j]);
 		}
 		printf("\n");
 	}
 }
-//玩家玩
-void Playermmove(char board[ROW][COL], int row, int col)
+//设置地雷
+void Setmine(char board[ROWS][COLS], int row, int col)
+{
+	int count = ESAY_COUNT;
+	while (count)
+	{
+		int x = rand() % row + 1;
+		int y = rand() % col + 1;
+		if (board[x][y] == '0')
+		{
+			board[x][y] = '1';
+			count--;
+		}
+			
+	}
+}
+//计算周围地雷个数
+int get_mine_count(char mine[ROWS][COLS], int x, int y)
+{
+	return mine[x - 1][y] +
+		mine[x - 1][y - 1] +
+		mine[x - 1][y + 1] +
+		mine[x][y - 1] +
+		mine[x][y + 1] +
+		mine[x + 1][y] +
+		mine[x + 1][y - 1] +
+		mine[x + 1][y + 1] - 8 * '0';
+}
+//自己没写出来炸金花
+//void panduan(char mine[ROWS][COLS], char show[ROWS][COLS],int x,int y)
+//{
+//	int count = get_mine_count(mine, x, y);
+//	if (count == '0')
+//	{
+//		show[x][y] = count + '0';
+//	}
+//}
+
+//炸金花式展开函数
+void explode_spread(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col, int x, int y)
+{
+	//限制非法坐标的展开
+	if (x >= 1 && x <= row && y >= 1 && y <= col)
+	{
+		//计算该位置附近四周地雷的个数
+		int count = get_mine_count(mine, x, y);
+		//若四周没有一个地雷，则需要向该位置的四周展开，直到展开到某个位置附近存在地雷为止
+		if (count == 0)
+		{
+			//把附近没有地雷的位置变成字符 “空格”
+			show[x][y] = '0';
+			int i = 0;
+			//向四周共8个位置递归调用
+			for (i = x - 1; i <= x + 1; i++)
+			{
+				int j = 0;
+				for (j = y - 1; j <= y + 1; j++)
+				{
+					//限制对点位置的重复展开调用，使得每一个位置只能向四周展开一次
+					if (show[i][j] == '*')
+					{
+						explode_spread(mine, show, row, col, i, j);
+					}
+				}
+			}
+		}
+		//若四周存在地雷则应该在这个位置上标注上地雷的个数
+		else
+		{
+			show[x][y] = count + '0';
+		}
+	}
+}
+void Findmine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col)
 {
 	int x = 0;
 	int y = 0;
-	printf("玩家走:>\n");
-	while (1)
+	int win = 0;
+	while (win<row*col- ESAY_COUNT)
 	{
-		printf("玩家请输入坐标:>");//判断输入合法性
+		printf("请输入要排查位置的坐标:>");
 		scanf("%d%d", &x, &y);
 		if (x >= 1 && x <= row && y >= 1 && y <= col)
 		{
-			if (board[x - 1][y - 1] == ' ')
+			if (mine[x][y] == '1')//是雷
 			{
-				board[x - 1][y - 1] = '*';
+				printf("很遗憾，你被炸死了！\n");
+				DisplayBoard(mine, ROW, COL);
 				break;
 			}
 			else
 			{
-				printf("该位置已经被占用\n");
+				//炸金花展开
+				explode_spread(mine,show,row,col,x,y);
+				DisplayBoard(show, ROW, COL);
+				win++;
 			}
 		}
 		else
 		{
-			printf("输入非法，请重新输入\n");
+			printf("坐标非法，请重新输入\n");
 		}
 	}
+	if(win == row * col - ESAY_COUNT )
+	{
+		printf("恭喜你！排雷成功！");
+		DisplayBoard(mine, ROW, COL);
+	}
+		
 }
-//电脑玩
-void Computermove(char board[ROW][COL], int row, int col)
-{
-	int x = 0;
-	int y = 0;
-	printf("电脑走:>\n");
-	while (1)
-	{
-		x = rand() % row;//余数一定小于除数 012
-		y = rand() % col;
-		if (board[x][y] == ' ')
-		{
-			board[x][y] = '#';
-			break;
-		}
-	}
-}
-int isfull(char board[ROW][COL], int row, int col)
-{
-	int i,j;
-	for (i = 0;i < row;i++)
-	{
-		for (j = 0;j < col;j++)
-		{
-			if (board[i][j] == ' ')
-				return 0;//没满
-		}
-	}
-	return 1;
-}
-char iswin(char board[ROW][COL], int row, int col)
-{
-	int i;
-	//判断行
-	for (i = 0; i < row;i++)
-	{
-		if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] != ' ')
-		{
-			return board[i][0];
-		}
-	}
-	//判断列
-	for (i = 0; i < col;i++)
-	{
-		if (board[0][i] == board[1][i] && board[0][i] == board[2][i] && board[0][i] != ' ')
-		{
-			return board[0][i];
-		}
-	}
-	//判断斜边
-	if (board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] != ' ')
-	{
-		return board[0][0];
-	}
-	if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[2][0] != ' ')
-	{
-		return board[0][2];
-	}
-	if (1 == isfull(board, ROW, COL))
-	{
-		return 'Q';
-	}
-	return 'C';
-}
-
-	
