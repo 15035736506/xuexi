@@ -1,0 +1,17 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+int digisum(int num)
+{
+	if (num > 9)
+		return digisum(num / 10) + (num % 10);
+	else
+		return num;
+}
+int main()
+{
+	unsigned int num = 0;
+	scanf("%d", &num);
+	int ret = digisum(num);
+	printf("%d", ret);
+	return 0;
+}
