@@ -1,0 +1,43 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+//学习结构体
+struct s
+{
+	int l;
+	double k;
+};
+struct st
+{
+	char a;
+	int b;
+	struct s c;
+	char d[20];
+};
+//void print(struct s* ps)
+//{
+//	printf("%d\n", ps->l);
+//	printf("%lf\n", (*ps).k);
+//}
+//void print1(struct s tmp)
+//{
+//	printf("%d\n", tmp.l);
+//	printf("%lf\n", tmp.k);
+//}
+void print2(struct st* pr)//打印结构体，用指针
+{
+	printf("%c\n", pr->a);
+	printf("%d\n", pr->b);
+	printf("%s\n", pr->d);
+}
+int main()
+{
+	/*char arr[] = { "你好" };*/
+	struct st r = { 'v',10,{5,5.6},"你好"};
+	struct s h = { 23,2.5 };
+	//print1(h);
+	print2(&r);
+	/*printf("%s", r.d);*/
+	//printf("%d\n", r.b);
+	//printf("%lf\n", r.c.k);
+	return 0;
+}
