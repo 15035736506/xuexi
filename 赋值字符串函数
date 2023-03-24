@@ -1,0 +1,35 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+//void my_strcpy(char* dest, char* str)//赋值字符串函数
+//{
+//	while (*str != '\0')
+//	{
+//		*dest = *str;
+//		str++;
+//		dest++;
+//	}
+//	if(*str=='\0')//在arr2结束时结束
+//		*dest = *str;
+//}
+
+//进行代码优化
+#include<assert.h>
+char* my_strcpy(char* dest, const char* str)//赋值字符串函数
+{
+	char *ret = dest;
+	assert(dest != NULL);//断言
+	assert(str != NULL);//断言
+	//把str指向的字符串拷贝到dest中所指向的空间，包括‘\0’
+	while (*dest++ = *str++)//后置++，以及为'\0'后跳出循环
+	{
+		;
+	}
+	return ret;
+}
+int main()
+{
+	char arr1[] = { "#########" };
+	char arr2[] = { "bit" };
+	printf("%s", my_strcpy(arr1, arr2));
+	return 0;
+}
