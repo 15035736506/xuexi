@@ -1,0 +1,57 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+void meau()
+{
+	printf("******************************\n");
+	printf("***1.Add*******2.Sub**********\n");
+	printf("***3.Mle*******4.Dif**********\n");
+	printf("******************************\n");
+	printf("******************************\n");
+}
+
+int Add(int x, int y)
+{
+	return x + y;
+}
+int Sub(int x, int y)
+{
+	return x - y;
+}
+int Mle(int x, int y)
+{
+	return x * y;
+}
+int Dif(int x, int y)
+{
+	return x / y;
+}
+int main()
+{
+	
+	int x = 0;
+	int y = 0;
+	int input=0;
+	int (*arr[5])(int, int) = { 0,Add,Sub,Mle,Dif };
+	do
+	{
+		meau();
+		printf("请输入需要计算的类型\n");
+		scanf("%d", &input);
+		if (input > 0 && input <= 4)
+		{
+
+			printf("请输入两个数字\n");
+			scanf("%d %d", &x, &y);
+			int ret = arr[input](x, y);
+			printf("%d\n", ret);
+		}
+		else if (input == 0)
+		{
+			printf("退出计算\n");
+		}
+		else
+		{
+			printf("输入错误，请重新输入\n");
+		}
+	} while (input);
+}
