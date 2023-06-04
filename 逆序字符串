@@ -1,0 +1,31 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+
+void reverse(char* str)//用指针的方式
+{
+	assert(str);//断言
+	int len = strlen(str);//字符串的总长度
+
+	char* left = str;
+	char* right = str + len - 1;
+
+	while (left<right)
+	{
+		char tmp = *left;
+		*left = *right;
+		*right = tmp;
+		left++;
+		right--;
+	}
+}
+int main()
+{
+	char arr[100] = { 0 };
+	//scanf("%s", arr);不支持空格
+	gets(arr);//gets输入字符，支持空格
+	reverse(arr);//逆序函数
+	printf("%s\n", arr);
+	return 0;
+}
