@@ -1,0 +1,62 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+
+//暴力求解法
+//void left_move(char* arr, int k)
+//{
+//	assert(arr);//assert(arr 1= NULL)；
+//	int i = 0;
+//	int len = strlen(arr);
+//	for (i = 0;i < k;i++)
+//	{
+//		//左旋转一个字符
+//		//1
+//		char tmp = *arr;
+//		//2
+//		int j = 0;
+//		for (j = 0;j < len - 1;j++)
+//		{
+//			*(arr + j) = *(arr + j + 1);
+//		}
+//		//3
+//		*(arr + len - 1) = tmp;
+//	}
+//}
+
+//三部逆序法
+//abcdef
+//ba fedc
+//cdefab
+void reverse(char* left, char* right)
+{
+	assert(left);
+	assert(right);
+	
+	while(left<right)
+	{
+		char tmp = *left;
+		*left = *right;
+		*right = tmp;
+		left++;
+		right--;
+	}
+}
+void left_move(char* arr, int k)
+{
+	assert(arr);
+	int len = strlen(arr);
+	assert(k <= len);//确保需要旋转字符串的数量不大于字符串的长度
+	reverse(arr, arr + k - 1);//逆序左边
+	reverse(arr + k, arr + len - 1);//逆序右边
+	reverse(arr, arr + len - 1);//逆序整体
+}
+
+int main()
+{
+	char arr[] = "abcdef";
+	left_move(arr, 2);
+	printf("%s\n", arr);
+	return 0;
+}
